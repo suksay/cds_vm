@@ -42,28 +42,27 @@ def bin2hex(str1):
     return binascii.unhexlify(str2)
 
 def update():
-    """
+
     #Check workspace and load data files
     cwd = os.getcwd()
     if cwd.split('/')[-1]!='snmp' : os.chdir("Scripts/python/snmp/")
-    f=open("json/inventory.json",)
-    hosts=json.load(f)
-    f.close()
-    """
-    
-    try: 
-        devices = get_request(URL_GET_DEVICES)['device']
+    #Get Devices list 
+    try:
+        f=open("json/inventory.json",)
+        devices=json.load(f)
+        f.close()
     except:
-        devices = list()
+        devices = dict()
 
-    #UNI2NNI
     elines= dict()
+    #UNI2NNI
+
     for node in devices :
-        id = node['device-id']
+        id = node['device_id']
         if node['vendor']=='huawei':
             eline_list = list()
             elines[id]=dict()
-            elinetable=quicksnmp.get_table(node['system-ipv4'],eline_hua,credentials)
+            elinetable=quicksnmp.get_table(node['address'],eline_hua,credentials)
             for eline_e in elinetable:
                 index='.'.join((str(eline_e[3][0][-3]),str(eline_e[3][0][-2]),str(eline_e[3][0][-1])))
                 nms_index = eline_e[3][1].prettyPrint()
@@ -85,10 +84,10 @@ def update():
 
     #UNI2UNI
     for node in devices :
-        id = node['device-id']
+        id = node['device_id']
         if node['vendor']=='huawei':
             eline_list = list()
-            elinetable=quicksnmp.get_table(node['system-ipv4'],uni2uni_hua,credentials)
+            elinetable=quicksnmp.get_table(node['address'],uni2uni_hua,credentials)
             for eline_e in elinetable:
                 #Main info
                 index='.'.join((str(eline_e[3][0][-3]),str(eline_e[3][0][-2]),str(eline_e[3][0][-1])))
@@ -119,10 +118,10 @@ def update():
 
     #NNI2NNI
     for node in devices :
-        id = node['device-id']
+        id = node['device_id']
         if node['vendor']=='huawei':
             eline_list = list()
-            elinetable=quicksnmp.get_table(node['system-ipv4'],nni2nni_hua,credentials)
+            elinetable=quicksnmp.get_table(node['address'],nni2nni_hua,credentials)
             for eline_e in elinetable:
                 #Main info
                 index='.'.join((str(eline_e[3][0][-3]),str(eline_e[3][0][-2]),str(eline_e[3][0][-1])))

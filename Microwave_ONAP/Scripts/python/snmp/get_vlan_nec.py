@@ -78,24 +78,14 @@ def updata_vlan() :
     cwd = os.getcwd()
     if cwd.split('/')[-1]!='snmp' : os.chdir("Scripts/python/snmp/")
 
-    """
-    #f=open("json/nec/vlans.json",)
-    #If VLAN data file is empty, creates a new dictionnary
-    
+    #Get Devices list 
     try:
-        vlans=json.load(f)
+        f=open("json/inventory.json",)
+        devices=json.load(f)
+        f.close()
     except:
-        vlans=dict()
-    f.close()
-   
-    f=open("json/inventory.json",)
-    hosts=json.load(f)
-    f.close()
-    """
-    try: 
-        devices = get_request(URL_GET_DEVICES)[1]['device']
-    except:
-        devices = list()
+        devices = dict()
+
 
     #nec_hosts =  [(id,host['address']) for (id,host) in hosts.items() if 'nec' in host['vendor']]
     aai_nec_vlans_datas = dict()
@@ -103,8 +93,8 @@ def updata_vlan() :
 
     for device in devices:
         if 'nec' in device['vendor']:
-            vlans_mapping = get_vlans_by_host(device['system-ipv4'])
-            vlans_configs = get_vlans_conf_by_host(device['system-ipv4'])
+            vlans_mapping = get_vlans_by_host(device['address'])
+            vlans_configs = get_vlans_conf_by_host(device['address'])
             aai_nec_vlans_datas['nec_vlans'][device] = list()
 
             for vlan_config in vlans_configs:

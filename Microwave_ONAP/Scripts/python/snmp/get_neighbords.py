@@ -18,14 +18,14 @@ physical_link = env.get_template('physical-link.json')
 
 def get_hua_id_from_inventory(ne_id, hosts):
     for ne in hosts:
-        if ne['model-customization-id'] == ne_id :
-            return ne['device-id']
+        if ne['ne_id'] == ne_id :
+            return ne['device_id']
 
 
 def get_huawei_neighbors(ip_address, hosts):
     links = []
     serie_fulloutdor = [92, 138, 151, 160]
-    hosts_ids = [ne['device-id'] for ne in hosts]
+    hosts_ids = [ne['device_id'] for ne in hosts]
 
     ne_serie = str(quicksnmp.get_oid(str(ip_address), hua_ne_serie,credentials)[0][-1])
     if int(ne_serie) in serie_fulloutdor:
@@ -60,7 +60,7 @@ def get_huawei_neighbors(ip_address, hosts):
 def get_nec_neighbords(ip_address, hosts):
     links = []
     neighbors=quicksnmp.get_table(ip_address, lldp_table_named_oid,credentials)
-    hosts_ids = [ne['device-id'] for ne in hosts]
+    hosts_ids = [ne['device_id'] for ne in hosts]
 
     for link in neighbors:
         link_i = dict()
@@ -87,7 +87,7 @@ def get_nec_neighbords(ip_address, hosts):
     return links
 
 
-def neighborships_aai_data_normalize(neighborships_data, devices):
+def neighborships_aai_data_normalize(neighborships_data, devices_list):
 
     def extract_opposite_site(nodeB_id, nodeB_int,nodeA_id, nodeA_int):
         for element in neighborships_data[nodeB_id]:
@@ -96,7 +96,11 @@ def neighborships_aai_data_normalize(neighborships_data, devices):
                 neighborships_data[nodeB_id].pop(neighborships_data[nodeB_id].index(element))
 
                 return nodeB_int_index
-       
+    
+    devices = list()
+    for ne in devices_list:
+        devices.append({ne['device_id']:ne['hostname']})
+
     aai_data = dict()
     aai_data['neighborships'] = list()
     #links = []
@@ -135,25 +139,36 @@ def neighborships_aai_data_normalize(neighborships_data, devices):
                     """
                     neighbor = dict()
                     neighbor['nodeA_id'] = device_id
+                    neighbor['nodeA_name'] = devices[device_id]
                     neighbor['nodeA_intf_index'] = element['local_int_index']
                     neighbor['nodeA_intf'] = element['local_intf']
 
                     neighbor['nodeB_id'] = element['neighbor']
+                    neighbor['nodeB_name'] = devices[element["neighbor"]]
                     neighbor['nodeB_intf_index'] = nodeB_index
                     neighbor['nodeB_intf'] = element["neighbor_intf"]
+
                     aai_data['neighborships'].append(neighbor)
 
     return aai_data
 
 def get():
-    #Get Devices list from AAI
-    devices = get_request(URL_GET_DEVICES)[1]['device']
+    #Get Devices list 
+    cwd = os.getcwd()
+    if cwd.split('/')[-1]!='snmp' : os.chdir("Scripts/python/snmp/")
+
+    try:
+        f=open("json/inventory.json",)
+        devices=json.load(f)
+        f.close()
+    except:
+        devices = dict()
 
     neighborships = dict()
 
     for device in devices:
         links = []
-        address=device['system-ipv4']
+        address=device['address']
         vendor=device['vendor']
         """
         Different SNMP processing according to vendor.

@@ -17,25 +17,29 @@ env = Environment(loader=FileSystemLoader('./aai_templates/'))
 
 qinqlink_model = env.get_template('qinq-link.json')
 # os.chdir("Scripts/python/snmp/")
+
 def update():
-    """
     #Check workspace and load data files
     cwd = os.getcwd()
     if cwd.split('/')[-1]!='snmp' : os.chdir("Scripts/python/snmp/")
-    f=open("json/inventory.json",)
-    hosts=json.load(f)
-    f.close()
-    """
-    #current_qinqlinks = 
-    devices = get_request(URL_GET_DEVICES)[1]['device']
+    
+    #Get Devices list 
+    try:
+        f=open("json/inventory.json",)
+        devices=json.load(f)
+        f.close()
+    except:
+        devices = dict()
+
+
     qinqlinks= dict()
 
     #Sending SNMP request and processing values for each huawei devices
     for node in devices :
-        id = node['device-id']
+        id = node['device_id']
         if node['vendor'] == 'huawei':
             qinq_list = list()
-            qinqtable=quicksnmp.get_table(node['system-ipv4'],qinq_hua,credentials)
+            qinqtable=quicksnmp.get_table(node['address'],qinq_hua,credentials)
             for qinq_e in qinqtable:
                 index=qinq_e[1][0][-1]
                 board=qinq_e[1][1].prettyPrint()

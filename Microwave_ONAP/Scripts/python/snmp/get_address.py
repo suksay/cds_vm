@@ -126,14 +126,8 @@ for device_id in devices :
     aai_devices_data['devices'].append(devices[device_id])
 
 
-print(aai_devices_data)
-"""
 with open('json/inventory.json', 'w') as fp:
-    json.dump(devices, fp)
+    json.dump(aai_devices_data['devices'], fp)
 
-f=open("json/inventory.json",)
-hosts=json.load(f)
-f.close()
-print(hosts)
-"""
+print(aai_devices_data)
 
