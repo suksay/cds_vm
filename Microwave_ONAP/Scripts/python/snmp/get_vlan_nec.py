@@ -80,7 +80,7 @@ def updata_vlan() :
 
     #Get Devices list 
     try:
-        f=open("json/inventory.json",)
+        f=open("inventory.json",)
         devices=json.load(f)
         f.close()
     except:

@@ -22,10 +22,10 @@ def update():
     #Check workspace and load data files
     cwd = os.getcwd()
     if cwd.split('/')[-1]!='snmp' : os.chdir("Scripts/python/snmp/")
-    
+
     #Get Devices list 
     try:
-        f=open("json/inventory.json",)
+        f=open("inventory.json",)
         devices=json.load(f)
         f.close()
     except:

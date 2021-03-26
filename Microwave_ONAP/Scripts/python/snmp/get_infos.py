@@ -2,6 +2,7 @@ import get_neighbords
 import get_elines
 import get_qinqlinks
 import get_vlan_nec
+import os
 
 def lldp_info_retrieve():
     #Retrieving LLDP tables for NEC and Huawei devices
@@ -43,4 +44,5 @@ if __name__ == "__main__":
     lldp_info_retrieve()
     huawei_links()
     nec_vlans()
+    os.remove("inventory.json")
 

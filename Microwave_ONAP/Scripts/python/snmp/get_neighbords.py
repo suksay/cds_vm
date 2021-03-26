@@ -158,7 +158,7 @@ def get():
     if cwd.split('/')[-1]!='snmp' : os.chdir("Scripts/python/snmp/")
 
     try:
-        f=open("json/inventory.json",)
+        f=open("inventory.json",)
         devices=json.load(f)
         f.close()
     except:
