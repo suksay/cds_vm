@@ -11,5 +11,3 @@ curl --location --request POST 'localhost:8000/api/v1/blueprint-model/publish' \
 
 echo "\n-----Done-----"
 
-
-docker cp bp-rest:/opt/app/onap/config/application.properties .

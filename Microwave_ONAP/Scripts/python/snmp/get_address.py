@@ -137,35 +137,3 @@ f.close()
 print(hosts)
 """
 
-### Save Host in AAI Database ###
-"""
-devices_model = env.get_template('device.json') 
-pnf_model = env.get_template('pnf.json') 
-
-for id in devices:
-
-
-    #-----  Device and  PNF associate ------#
-    URL_DEVICE = URL_GET_DEVICES + '/device/{device_id}'.format(device_id = id )
-    URL_PNF = URL_GET_PNFS + '/pnf/{pnf_name}'.format(pnf_name = id )
-
-    if devices[id]['vendor'] == 'huawei':
-        device_data = json.loads(devices_model.render(device_id=id, device_name=devices[id]['hostname'], vendor=devices[id]['vendor'], ipv4=devices[id]['address'], description="We use model-customization-id for NE ID ", ne_id=devices[id]['ne_id'], model_invariant_id=_MW_INVARIANT_ID_, model_version_id=_HUAWEI_MW_VERSION_ID_))
-        pnf_data = json.loads(pnf_model.render(device_id=id, device_name=devices[id]['hostname'], selflink=URL_DEVICE, equip_type="microwave", vendor=devices[id]['vendor'], model_invariant_id=_MW_INVARIANT_ID_, model_version_id=_HUAWEI_MW_VERSION_ID_))
-    else :
-        device_data = json.loads(devices_model.render(device_id=id, device_name=devices[id]['hostname'], vendor=devices[id]['vendor'], ipv4=devices[id]['address'], description="We use model-customization-id for NE ID ", model_invariant_id=_MW_INVARIANT_ID_, model_version_id=_NEC_MW_VERSION_ID_))
-        pnf_data = json.loads(pnf_model.render(device_id=id, device_name=devices[id]['hostname'], selflink=URL_DEVICE, equip_type="microwave", vendor=devices[id]['vendor'], model_invariant_id=_MW_INVARIANT_ID_, model_version_id=_NEC_MW_VERSION_ID_))
-
-    
-    #Requests
-    req_device = put_request(URL_DEVICE, device_data)
-    req_pnf = put_request(URL_PNF, pnf_data)
-
-    
-
-
-######Print Devices Found #####
-
-print('Devices Found : ')
-print(devices)
-"""
