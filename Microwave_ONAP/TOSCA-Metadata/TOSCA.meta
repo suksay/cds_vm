@@ -4,4 +4,4 @@ Created-By: Nathan Decaux <nathan.decaux@orange.com>, Silas Monney <silasmanasse
 Entry-Definitions: Definitions/remote_ansible.json
 Template-Tags: nso, juniper, remote_ansible
 Template-Name: mw-manager
-Template-Version: 1.0.0
+Template-Version: 1.1.0
