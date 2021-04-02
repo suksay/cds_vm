@@ -5,8 +5,8 @@
     "equip-type" : "{{ equip_type }}",
     "equip-vendor" : "{{ vendor }}",
     "in-maint" :"true",
+    "operational-status" : "{{ operational_status }}",
     "model-customization-id" : "",
     "model-invariant-id" : "{{ model_invariant_id }}",
     "model-version-id" : "{{ model_version_id }}"
-
 }
